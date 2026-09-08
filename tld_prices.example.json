@@ -1,0 +1,63 @@
+{
+  "_note": "Example feed. Copy to tld_prices.json (or the path in the module's TLD Price Feed Path setting), review every price against spaceship.com, and keep 'currency' matching a currency configured in your WHMCS. Prices below were harvested 2026-09-08 in AED and WILL go stale.",
+  "updated": "2026-09-08",
+  "currency": "AED",
+  "tlds": {
+    ".com": {
+      "register": 33.35,
+      "renew": 37.39,
+      "transfer": 35.55,
+      "minYears": 1,
+      "maxYears": 10
+    },
+    ".net": {
+      "register": 41.87,
+      "renew": 41.87,
+      "transfer": 41.87,
+      "minYears": 1,
+      "maxYears": 10
+    },
+    ".org": {
+      "register": 25.16,
+      "renew": 42.57,
+      "transfer": 41.47,
+      "minYears": 1,
+      "maxYears": 10
+    },
+    ".ai": {
+      "register": 293.77,
+      "renew": 293.77,
+      "transfer": 293.77,
+      "minYears": 2,
+      "maxYears": 10
+    },
+    ".biz": {
+      "register": 69.16,
+      "renew": 69.16,
+      "transfer": 69.16,
+      "minYears": 1,
+      "maxYears": 10
+    },
+    ".info": {
+      "register": 12.16,
+      "renew": 80.59,
+      "transfer": 80.59,
+      "minYears": 1,
+      "maxYears": 10
+    },
+    ".us": {
+      "register": 23.8,
+      "renew": 23.8,
+      "transfer": 23.8,
+      "minYears": 1,
+      "maxYears": 10
+    },
+    ".me": {
+      "register": 57.04,
+      "renew": 57.04,
+      "transfer": 57.04,
+      "minYears": 1,
+      "maxYears": 10
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+    "schema": "1.0",
+    "type": "whmcs-registrars",
+    "name": "spaceship",
+    "license": "mit",
+    "category": "domains",
+    "description": {
+        "name": "Spaceship",
+        "tagline": "Free, production-hardened registrar module for the Spaceship.com Public API.",
+        "long": "Full domain lifecycle automation for Spaceship.com: registration, renewals, transfers, nameservers, WHOIS contacts, registrar lock, EPP codes, DNS records, ID protection and built-in TLD pricing sync. Async-safe operations, hardened logging, rate-limit-aware caching. No paid add-ons, no licence checks, no third-party code. Maintained by BIGBANG ITS (its.ae)."
+    },
+    "logo": {
+        "filename": "logo.png"
+    },
+    "support": {
+        "homepage": "https://github.com/bigbang-its/whmcs-spaceship-registrar",
+        "docs_url": "https://github.com/bigbang-its/whmcs-spaceship-registrar#readme"
+    },
+    "authors": [
+        {
+            "name": "BIGBANG ITS \u2014 Big Bang Information Technology Solutions",
+            "homepage": "https://its.ae"
+        }
+    ]
+}
