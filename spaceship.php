@@ -395,7 +395,7 @@ function spaceship_RegisterDomain($params)
         // 2. Register Domain
         $registrationData = [
             'autoRenew' => false,
-            'years' => $params['regperiod'],
+            'years' => (int) $params['regperiod'],
             'contacts' => [
                 'registrant' => $contactIds['registrant'],
                 'admin' => $contactIds['admin'],
@@ -446,7 +446,7 @@ function spaceship_RenewDomain($params)
 
     try {
         $renewalData = [
-            'years' => $params['regperiod'],
+            'years' => (int) $params['regperiod'],
         ];
 
         $client->request('POST', "/domains/{$params['domainname']}/renew", $renewalData, 'RenewDomain');

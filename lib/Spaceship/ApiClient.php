@@ -127,6 +127,23 @@ class ApiClient
 
         if ($httpCode >= 400) {
             $message = isset($result['detail']) ? $result['detail'] : 'Unknown API Error';
+            // A 422 body carries the offending field in 'data'; without it the admin only
+            // ever sees the generic "The request is invalid."
+            if (!empty($result['data']) && \is_array($result['data'])) {
+                $parts = [];
+                foreach ($result['data'] as $item) {
+                    if (\is_array($item)) {
+                        $field = isset($item['field']) ? $item['field'] : '?';
+                        $detail = isset($item['details']) ? $item['details'] : \json_encode($item);
+                        $parts[] = $field . ': ' . $detail;
+                    } else {
+                        $parts[] = (string) $item;
+                    }
+                }
+                if ($parts) {
+                    $message .= ' (' . \implode(' | ', $parts) . ')';
+                }
+            }
             throw new \Exception("Spaceship API Error ($httpCode): " . $message);
         }
 

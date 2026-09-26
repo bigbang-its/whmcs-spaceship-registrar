@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.1] - 2026-09-26
+
+### Fixed
+- **Registration and renewal failed with `422 The request is invalid`.** WHMCS passes
+  `regperiod` as a string, and the API requires `years` to be an integer, so every
+  `POST /domains/{domain}` and `/renew` call was rejected. The value is now cast to int.
+- **Validation errors now name the field.** A 422 response carries a `data` array
+  identifying what was wrong (for example `years: Value is "string" but should be
+  "integer"`); only the generic `detail` sentence was shown before, which made these
+  failures very hard to diagnose from the WHMCS order screen.
+
 ## [3.0.0] - 2026-09-08 — BIGBANG ITS build
 
 Active maintenance transferred to **BIGBANG ITS** (https://its.ae). All premium/licensing code paths were removed — every feature, including TLD Pricing Sync, is free.
