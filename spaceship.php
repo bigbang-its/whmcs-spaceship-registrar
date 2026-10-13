@@ -889,6 +889,15 @@ function spaceship_SaveContactDetails($params)
                 'phone' => $get('Phone Number'),
             ];
 
+            // Optional fields must be OMITTED when empty, not sent as "". The API
+            // validates the format of whatever it is given, so an empty address2
+            // fails with "The address2 field must follow the allowed format."
+            foreach (['organization', 'address2'] as $optional) {
+                if ($contactData[$optional] === '') {
+                    unset($contactData[$optional]);
+                }
+            }
+
             // Use the same in-memory cache logic
             global $spaceshipContactCache;
             $cacheKey = md5(json_encode($contactData));
