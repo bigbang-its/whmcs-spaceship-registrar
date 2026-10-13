@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the admin UI, which can look like missing registrant data when the registry has it.
   The module now emits `Company Name`, and accepts either key when saving.
 
+- **A single absent optional field failed the whole save.** Every contact field was
+  read straight out of the submitted array. WHMCS omits empty optional fields, so an
+  empty Address 2 arrived as `null` and the API rejected the entire request with
+  422 `Value is null but should be string`. All fields are now coalesced to strings.
+
 - **Technical contact used a non-standard key.** The module emitted and read `Tech`
   where WHMCS uses `Technical`, so a caller following WHMCS convention wrote into a
   set the module never read back. It now emits `Technical` and accepts both on save.

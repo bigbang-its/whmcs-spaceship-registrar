@@ -865,20 +865,28 @@ function spaceship_SaveContactDetails($params)
             $typeLower = ($type === 'Technical') ? 'tech' : strtolower($type);
             $details = $params['contactdetails'][$type];
 
+            // Every field is coalesced to a string: WHMCS omits empty optional
+            // fields from the submitted array, and the API rejects a null with
+            // 422 "Value is null but should be string" - one absent Address 2 was
+            // enough to fail the whole save.
+            $get = static function ($key) use ($details) {
+                return isset($details[$key]) ? (string) $details[$key] : '';
+            };
+
             $contactData = [
-                'firstName' => $details['First Name'],
-                'lastName' => $details['Last Name'],
-                'organization' => isset($details['Company Name'])
-                    ? $details['Company Name']
-                    : (isset($details['Organization Name']) ? $details['Organization Name'] : ''),
-                'email' => $details['Email Address'],
-                'address1' => $details['Address 1'],
-                'address2' => $details['Address 2'],
-                'city' => $details['City'],
-                'country' => $details['Country'],
-                'stateProvince' => $details['State'],
-                'postalCode' => $details['Postcode'],
-                'phone' => $details['Phone Number'],
+                'firstName' => $get('First Name'),
+                'lastName' => $get('Last Name'),
+                'organization' => $get('Company Name') !== ''
+                    ? $get('Company Name')
+                    : $get('Organization Name'),
+                'email' => $get('Email Address'),
+                'address1' => $get('Address 1'),
+                'address2' => $get('Address 2'),
+                'city' => $get('City'),
+                'country' => $get('Country'),
+                'stateProvince' => $get('State'),
+                'postalCode' => $get('Postcode'),
+                'phone' => $get('Phone Number'),
             ];
 
             // Use the same in-memory cache logic
