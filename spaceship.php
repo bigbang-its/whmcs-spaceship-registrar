@@ -41,7 +41,7 @@ function spaceship_getConfigArray()
             'FriendlyName' => ' ',
             'Type' => 'System',
             'Value' => '<div class="alert alert-info" style="margin: 5px 0;">
-                <h4 style="margin: 0 0 10px 0;">Spaceship Registrar — BIGBANG ITS build v3.0.0</h4>
+                <h4 style="margin: 0 0 10px 0;">Spaceship Registrar — BIGBANG ITS build v3.0.2</h4>
                 <p style="margin-bottom: 10px;">Automate domain registration and management via the Spaceship Public API.
                 Self-maintained build: hardened logging, async-safe operations, live availability parsing,
                 and built-in TLD Pricing Sync from a locally maintained price feed
@@ -809,11 +809,16 @@ function spaceship_GetContactDetails($params)
                 }
 
                 $details = $localContactCache[$contactId];
-                $whmcsType = ucfirst($type);
+                // WHMCS names the technical contact 'Technical', not 'Tech'; emitting
+                // 'Tech' meant a caller following WHMCS convention wrote into a set
+                // this module never read back.
+                $whmcsType = ($type === 'tech') ? 'Technical' : ucfirst($type);
                 $contacts[$whmcsType] = [
                     'First Name' => $details['firstName'],
                     'Last Name' => $details['lastName'],
-                    'Organization Name' => isset($details['organization']) ? $details['organization'] : '',
+                    // WHMCS uses 'Company Name'; 'Organization Name' made the company
+                    // come back empty from DomainGetWhoisInfo and in the admin UI.
+                    'Company Name' => isset($details['organization']) ? $details['organization'] : '',
                     'Email Address' => $details['email'],
                     'Address 1' => $details['address1'],
                     'Address 2' => isset($details['address2']) ? $details['address2'] : '',
@@ -847,14 +852,25 @@ function spaceship_SaveContactDetails($params)
 
         // We need to map WHMCS Contact Details array to the format our helper expects
         // or just use the same deduplication logic here manually.
-        foreach (['Registrant', 'Admin', 'Tech', 'Billing'] as $type) {
-            $typeLower = strtolower($type);
+        foreach (['Registrant', 'Admin', 'Technical', 'Tech', 'Billing'] as $type) {
+            // WHMCS submits only the contact sets that were changed. Reading an absent
+            // set sent nulls to the API, which rejected the whole request with 422 -
+            // so a partial update could not be done at all, and touching the managing
+            // contacts forced a rewrite of the Registrant, which is a Change of
+            // Registrant and carries a 60-day transfer lock.
+            if (empty($params['contactdetails'][$type])) {
+                continue;
+            }
+            // 'Technical' and 'Tech' address the same contact; take whichever came.
+            $typeLower = ($type === 'Technical') ? 'tech' : strtolower($type);
             $details = $params['contactdetails'][$type];
 
             $contactData = [
                 'firstName' => $details['First Name'],
                 'lastName' => $details['Last Name'],
-                'organization' => $details['Organization Name'],
+                'organization' => isset($details['Company Name'])
+                    ? $details['Company Name']
+                    : (isset($details['Organization Name']) ? $details['Organization Name'] : ''),
                 'email' => $details['Email Address'],
                 'address1' => $details['Address 1'],
                 'address2' => $details['Address 2'],

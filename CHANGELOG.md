@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.2] - 2026-10-13
+
+### Fixed
+
+- **Company name was invisible to WHMCS.** `GetContactDetails` returned the company
+  under `Organization Name`, while WHMCS reads `Company Name`. The organisation held
+  at the registrar came back empty from `DomainGetWhoisInfo` and showed as blank in
+  the admin UI, which can look like missing registrant data when the registry has it.
+  The module now emits `Company Name`, and accepts either key when saving.
+
+- **Technical contact used a non-standard key.** The module emitted and read `Tech`
+  where WHMCS uses `Technical`, so a caller following WHMCS convention wrote into a
+  set the module never read back. It now emits `Technical` and accepts both on save.
+
+- **Partial contact updates failed entirely.** `SaveContactDetails` looped over all
+  four contact types and read each one without checking it was present. WHMCS submits
+  only the sets that changed, so updating Admin/Technical/Billing alone made the first
+  iteration read `null` and the API rejected the whole request with HTTP 422 before
+  any contact was written. Absent sets are now skipped.
+
+  This one has a consequence worth spelling out: until now the module could not touch
+  the managing contacts without also rewriting the Registrant — and rewriting the
+  Registrant is a Change of Registrant under the ICANN Transfer Policy, which carries
+  a 60-day inter-registrar transfer lock.
+
 ## [3.0.1] - 2026-09-26
 
 ### Fixed
