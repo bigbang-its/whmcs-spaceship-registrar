@@ -57,14 +57,14 @@ function spaceship_getConfigArray()
             'Type' => 'text',
             'Size' => '100',
             'Default' => '',
-            'Description' => 'Enter your Spaceship API Key',
+            'Description' => '2s8d2Xiznk1otqmHBwSe2Ld',
         ],
         'APISecret' => [
             'FriendlyName' => 'API Secret',
             'Type' => 'password',
             'Size' => '100',
             'Default' => '',
-            'Description' => 'Enter your Spaceship API Secret',
+            'Description' => 'vEpn0uZTUfPKKDnA1Ndo2CW9sw8FtLdFmTKdlELiPQ3eyAuJJRczuyzdve03LTwO',
         ],
         'TestMode' => [
             'FriendlyName' => 'Test Mode',
